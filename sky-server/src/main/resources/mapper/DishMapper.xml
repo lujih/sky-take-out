@@ -7,4 +7,19 @@
         insert into dish (name, category_id, price, image, description, status, create_time, update_time, create_user, update_user)
         VALUES (#{name},#{categoryId},#{price},#{image},#{description},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})
     </insert>
+    <select id="dishPage" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name != null">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by create_time
+    </select>
 </mapper>
