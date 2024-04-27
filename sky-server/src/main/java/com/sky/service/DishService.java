@@ -36,4 +36,11 @@ public interface DishService {
     * 修改菜品
     * */
     void updateDish(DishDTO dishDTO);
+
+    /**
+     * 菜品起售、停售
+     * @param status
+     * @param id
+     */
+    void updateStatus(Integer status, Long id);
 }
