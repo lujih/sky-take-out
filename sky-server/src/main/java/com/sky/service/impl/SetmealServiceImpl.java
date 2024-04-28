@@ -113,4 +113,17 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.addSetmealDish(setmealDish);
         }
     }
+
+    /**
+     * 套餐起售、停售
+     * @param status
+     * @param id
+     */
+    @Override
+    public void updateSetmealStatus(Integer status, Long id) {
+        Setmeal setmeal = new Setmeal();
+        setmeal.setStatus(status);
+        setmeal.setId(id);
+        setmealMapper.update(setmeal);
+    }
 }
