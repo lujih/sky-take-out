@@ -6,6 +6,12 @@
         insert into setmeal_dish (setmeal_id, dish_id, name, price, copies)
         VALUES (#{setmealId},#{dishId},#{name},#{price},#{copies})
     </insert>
+    <delete id="delet">
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 
     <select id="getById" resultType="java.lang.Long">
         select s.setmeal_id from setmeal_dish s where dish_id in
