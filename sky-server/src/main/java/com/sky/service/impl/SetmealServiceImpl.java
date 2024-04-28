@@ -63,6 +63,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 根据id批量删除套餐
+     *
      * @param ids
      */
     @Override
@@ -71,7 +72,7 @@ public class SetmealServiceImpl implements SetmealService {
         List<Setmeal> setmeals = setmealMapper.getById(ids);
         //起售中的套餐不能删除
         for (Setmeal setmeal : setmeals) {
-            if (setmeal.getStatus() == StatusConstant.ENABLE){
+            if (setmeal.getStatus() == StatusConstant.ENABLE) {
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
             }
         }
@@ -82,6 +83,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 根据id查询套餐
+     *
      * @param id
      * @return
      */
@@ -98,6 +100,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 修改套餐
+     *
      * @param setmealDTO
      */
     @Override
@@ -120,6 +123,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 套餐起售、停售
+     *
      * @param status
      * @param id
      */
@@ -129,7 +133,7 @@ public class SetmealServiceImpl implements SetmealService {
         setmeal.setStatus(status);
         setmeal.setId(id);
         //起售套餐时，如果套餐内包含停售的菜品，则不能起售
-        if (status == StatusConstant.DISABLE){
+        if (status == StatusConstant.DISABLE) {
             setmealMapper.update(setmeal);
             return;
         }
@@ -137,7 +141,7 @@ public class SetmealServiceImpl implements SetmealService {
         for (SetmealDish setmealDish : byOneId) {
             Long dishId = setmealDish.getDishId();
             Dish dish = dishMapper.getById(dishId);
-            if (dish.getStatus() != StatusConstant.ENABLE){
+            if (dish.getStatus() != StatusConstant.ENABLE) {
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
             }
         }
