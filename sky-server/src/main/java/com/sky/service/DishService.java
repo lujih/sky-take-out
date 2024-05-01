@@ -34,12 +34,13 @@ public interface DishService {
     DishVO getDishById(Long id);
 
     /*
-    * 修改菜品
-    * */
+     * 修改菜品
+     * */
     void updateDish(DishDTO dishDTO);
 
     /**
      * 菜品起售、停售
+     *
      * @param status
      * @param id
      */
@@ -47,8 +48,17 @@ public interface DishService {
 
     /**
      * 根据菜品分类id查询数据
+     *
      * @param categoryId
      * @return
      */
     List<Dish> getDishByCategoryId(Long categoryId);
+
+    /**
+     * 条件查询菜品和口味
+     *
+     * @param dish
+     * @return
+     */
+    List<DishVO> listWithFlavor(Dish dish);
 }
