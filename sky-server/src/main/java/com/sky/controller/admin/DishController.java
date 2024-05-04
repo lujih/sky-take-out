@@ -9,11 +9,10 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RestController
@@ -22,15 +21,12 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @PostMapping
+    @CacheEvict(cacheNames = "dishCache", key = "#dishDTO.categoryId")
     public Result addDish(@RequestBody DishDTO dishDTO) {
         log.info("添加菜品: {}", dishDTO);
         dishService.addDish(dishDTO);
-        //清除缓存
-        redisTemplate.delete("dish_" + dishDTO.getCategoryId());
         return Result.success();
     }
 
@@ -42,12 +38,10 @@ public class DishController {
     }
 
     @DeleteMapping
+    @CacheEvict(cacheNames = "dishCache", allEntries = true)
     public Result deleteDish(@RequestParam List<Long> ids) {
         log.info("批量删除菜品:{}", ids);
         dishService.deleteDish(ids);
-        //清除缓存
-        Set keys = redisTemplate.keys("dish_");
-        redisTemplate.delete(keys);
         return Result.success();
     }
 
@@ -71,12 +65,10 @@ public class DishController {
      * @return
      */
     @PutMapping
+    @CacheEvict(cacheNames = "dishCache", allEntries = true)
     public Result updateDish(@RequestBody DishDTO dishDTO) {
         log.info("修改菜品数据:{}",dishDTO);
         dishService.updateDish(dishDTO);
-        //清除缓存
-        Set keys = redisTemplate.keys("dish_");
-        redisTemplate.delete(keys);
         return Result.success();
     }
 
@@ -88,12 +80,10 @@ public class DishController {
      * @return
      */
     @PostMapping("/status/{status}")
+    @CacheEvict(cacheNames = "dishCache", allEntries = true)
     public Result updateDishStatus(@PathVariable Integer status, Long id) {
         log.info("菜品起售、停售:{}{}", status, id);
         dishService.updateStatus(status, id);
-        //清除缓存
-        Set keys = redisTemplate.keys("dish_");
-        redisTemplate.delete(keys);
         return Result.success();
     }
 
