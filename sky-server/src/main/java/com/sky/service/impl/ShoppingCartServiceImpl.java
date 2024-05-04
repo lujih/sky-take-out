@@ -66,10 +66,52 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
     }
 
+    /**
+     * 查看购物车
+     *
+     * @return
+     */
     @Override
     public List<ShoppingCart> viewShoppingCart() {
+        ShoppingCart shoppingCart = new ShoppingCart();
         Long currentId = BaseContext.getCurrentId();
-        List<ShoppingCart> shoppingCarts = shoppingCartMapper.viewShoppingCartByUserId(currentId);
+        shoppingCart.setUserId(currentId);
+        List<ShoppingCart> shoppingCarts = shoppingCartMapper.selectShoppingCartList(shoppingCart);
         return shoppingCarts;
     }
+
+    /**
+     * 删除商品
+     *
+     * @param shoppingCartDTO
+     */
+    @Override
+    public void deletingProducts(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        Long currentId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(currentId);
+        //查询当前购物车此商品
+        List<ShoppingCart> shoppingCartList = shoppingCartMapper.selectShoppingCartList(shoppingCart);
+        ShoppingCart cart = shoppingCartList.get(0);
+        Integer number = cart.getNumber();
+        if (number > 1) {
+            cart.setNumber(number - 1);
+            shoppingCartMapper.updateNunber(cart);
+        }else {
+            shoppingCartMapper.deletingProducts(shoppingCart);
+        }
+    }
+
+    /**
+     * 清空购物车
+     */
+    @Override
+    public void clean() {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        Long currentId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(currentId);
+        shoppingCartMapper.deletingProducts(shoppingCart);
+    }
 }
+

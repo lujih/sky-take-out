@@ -3,7 +3,6 @@ package com.sky.mapper;
 import com.sky.entity.ShoppingCart;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 public interface ShoppingCartMapper {
 
     /**
-     * 查询当前购物车有没有商品
+     * 查询当前购物车
      *
      * @param shoppingCart
      * @return
@@ -37,10 +36,8 @@ public interface ShoppingCartMapper {
     void add(ShoppingCart shoppingCart);
 
     /**
-     * 查看购物车
-     * @param currentId
-     * @return
+     * 删除商品
+     * @param shoppingCart
      */
-    @Select("select * from shopping_cart where user_id = #{currentId}")
-    List<ShoppingCart> viewShoppingCartByUserId(Long currentId);
+    void deletingProducts(ShoppingCart shoppingCart);
 }
