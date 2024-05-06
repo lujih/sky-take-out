@@ -4,6 +4,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
+import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.AddressBookBusinessException;
@@ -17,6 +18,7 @@ import com.sky.vo.OrderSubmitVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,14 +38,15 @@ public class OrderServiceImpl implements OrderService {
      * 用户下单
      */
     @Override
+    @Transactional
     public OrderSubmitVO creatingAnOrder(OrdersSubmitDTO ordersSubmitDTO) {
         //异常处理
-        //地址为空
+        //判断地址为空
         AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
         if (addressBook == null) {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
-        //购物车为空
+        //判断购物车为空
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUserId(BaseContext.getCurrentId());
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.selectShoppingCartList(shoppingCart);
@@ -53,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
         //向订单表插入一条数据
         Orders orders = new Orders();
         BeanUtils.copyProperties(ordersSubmitDTO, orders);
+        //补全数据
         orders.setUserId(BaseContext.getCurrentId());
         orders.setOrderTime(LocalDateTime.now());
         orders.setPayStatus(Orders.UN_PAID);
@@ -63,10 +67,22 @@ public class OrderServiceImpl implements OrderService {
         orders.setAddress(addressBook.getCityCode());
         orderMapper.creatingAnOrder(orders);
         //向订单明细表插入n条数据
-
+        for (ShoppingCart cart : shoppingCartList) {
+            OrderDetail OrderDetail = new OrderDetail();
+            BeanUtils.copyProperties(cart, OrderDetail);
+            OrderDetail.setOrderId(orders.getId());
+            orderDetailMapper.creatingAnOrder(OrderDetail);
+        }
         //清空用户购物车
         shoppingCartMapper.deletingProducts(shoppingCart);
 
-        return null;
+        //构建返回数据
+        OrderSubmitVO orderSubmitVO = new OrderSubmitVO();
+        orderSubmitVO.setOrderNumber(orders.getNumber());
+        orderSubmitVO.setOrderTime(orders.getOrderTime());
+        orderSubmitVO.setOrderAmount(orders.getAmount());
+        orderSubmitVO.setId(orders.getId());
+
+        return orderSubmitVO;
     }
 }
