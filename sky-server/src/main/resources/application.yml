@@ -53,5 +53,7 @@ sky:
     bucket-name: ${sky.alioss.bucket-name}
 
   wechat:
-    appid: ${sky.wechat.appid}
+    appid: ${sky.wechat.appit}
     secret: ${sky.wechat.secret}
+
+

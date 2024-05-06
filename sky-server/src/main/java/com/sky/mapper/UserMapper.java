@@ -11,4 +11,7 @@ public interface UserMapper {
     User getByOpenid(String openid);
 
     void addUser(User newUser);
+
+    @Select("select * from user where id = #{userid}")
+    User getById(Long userId);
 }
