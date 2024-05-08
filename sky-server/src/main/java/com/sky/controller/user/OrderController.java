@@ -38,9 +38,9 @@ public class OrderController {
     }
 
     @GetMapping("/historyOrders")
-    public Result<PageResult> orderInquiry( Integer page, Integer pageSize, Integer status) {
+    public Result<PageResult> orderInquiry(Integer page, Integer pageSize, Integer status) {
         log.info("历史订单查询:{}{}{}", page, pageSize, status);
-        PageResult pageResult = orderService.orderInquiry(page,pageSize,status);
+        PageResult pageResult = orderService.orderInquiry(page, pageSize, status);
         return Result.success(pageResult);
     }
 
@@ -53,16 +53,15 @@ public class OrderController {
 
     @PutMapping("/cancel/{id}")
     public Result cancel(@PathVariable Long id) throws Exception {
-        log.info("取消订单id:{}",id);
+        log.info("取消订单id:{}", id);
         orderService.cancel(id);
         return Result.success();
     }
 
     @PostMapping("/repetition/{id}")
-    public Result repetition(@PathVariable Long id){
-        log.info("再来一单id:{}",id);
+    public Result repetition(@PathVariable Long id) {
+        log.info("再来一单id:{}", id);
         orderService.repetition(id);
         return Result.success();
     }
-
 }
