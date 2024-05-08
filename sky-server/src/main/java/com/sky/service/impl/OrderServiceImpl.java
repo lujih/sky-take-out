@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
         Map map = new HashMap<>();
         map.put("type", 1); //1是来单提醒,2是催单提醒
         map.put("orderId", orders.getId());
-        map.put("content", "订单号id:" + orders.getId() + "来单提醒");
+        map.put("content", "订单号:" + orders.getNumber() + "来单提醒");
 
         String jsonString = JSON.toJSONString(map);
         webSocketServer.sendToAllClient(jsonString);
@@ -485,15 +485,20 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 客户催单
+     *
      * @param id
      */
     @Override
     public void reminder(Long id) {
+        Orders ordersDB = orderMapper.getById(id);
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
         //通过WebSocket给管理端发送提醒消息
         Map map = new HashMap<>();
         map.put("type", 2); //1是来单提醒,2是催单提醒
         map.put("orderId", id);
-        map.put("content", "订单号id:" + id + "来单提醒");
+        map.put("content", "订单号:" + ordersDB.getNumber() + "来单提醒");
 
         String jsonString = JSON.toJSONString(map);
         webSocketServer.sendToAllClient(jsonString);
