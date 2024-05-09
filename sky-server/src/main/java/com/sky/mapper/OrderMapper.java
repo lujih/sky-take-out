@@ -82,6 +82,6 @@ public interface OrderMapper {
      * @return
      */
     @Select("select sum(amount) from orders where status = #{status} and order_time BETWEEN #{begin} AND #{end};")
-    Double getByTime(LocalDateTime begin, LocalDateTime end, Integer status);
+    Double getAmountByTime(LocalDateTime begin, LocalDateTime end, Integer status);
 }
 
