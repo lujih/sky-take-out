@@ -61,8 +61,7 @@ public interface OrderMapper {
      * @param status
      * @return
      */
-    @Select("select count(*) from orders where status = #{status}")
-    Integer countStatus(Integer status);
+    Integer countStatus(LocalDateTime begin,Integer status);
 
     /**
      * 获取支付超时的订单

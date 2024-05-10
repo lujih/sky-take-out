@@ -348,9 +348,9 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderStatisticsVO statistics() {
-        Integer toBeConfirmed = orderMapper.countStatus(Orders.TO_BE_CONFIRMED);
-        Integer confirmed = orderMapper.countStatus(Orders.CONFIRMED);
-        Integer deliveryInProgress = orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
+        Integer toBeConfirmed = orderMapper.countStatus(null,Orders.TO_BE_CONFIRMED);
+        Integer confirmed = orderMapper.countStatus(null,Orders.CONFIRMED);
+        Integer deliveryInProgress = orderMapper.countStatus(null,Orders.DELIVERY_IN_PROGRESS);
 
         OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
         orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
