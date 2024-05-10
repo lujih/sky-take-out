@@ -83,5 +83,20 @@ public interface OrderMapper {
      */
     @Select("select sum(amount) from orders where status = #{status} and order_time BETWEEN #{begin} AND #{end};")
     Double getAmountByTime(LocalDateTime begin, LocalDateTime end, Integer status);
+
+    /**
+     * 获取订单数
+     * @param orders
+     * @return
+     */
+    Integer getTotalOrders(Orders orders);
+
+    /**
+     * 根据日期获取订单数
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    Integer getOrderNumber(LocalDateTime beginTime, LocalDateTime endTime, Integer status );
 }
 
